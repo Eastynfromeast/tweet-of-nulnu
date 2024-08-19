@@ -26,3 +26,5 @@ export async function getMoreTweet(page: number) {
 export async function getTotalTweetCount() {
 	return await db.tweet.count();
 }
+
+export async function getSearchedTweet(keyword: string) {}

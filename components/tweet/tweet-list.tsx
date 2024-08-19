@@ -10,6 +10,8 @@ interface TweetListProps {
 	initialTweets: InitialTweet;
 }
 
+const pageLength = 3;
+
 export default function TweetList({ initialTweets }: TweetListProps) {
 	const [tweets, setTweets] = useState(initialTweets);
 	const [page, setPage] = useState(0);
