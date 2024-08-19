@@ -1,6 +1,7 @@
 "use server";
 
 import db from "@/lib/db";
+import { z } from "zod";
 
 export async function getMoreTweet(page: number) {
 	const anotherTweet = await db.tweet.findMany({
@@ -27,4 +28,32 @@ export async function getTotalTweetCount() {
 	return await db.tweet.count();
 }
 
-export async function getSearchedTweet(keyword: string) {}
+const searhSchema = z.object({
+	keyword: z.string({
+		required_error: "검색할 키워드를 입력해주세요",
+	}),
+});
+
+export async function getSearchedTweet(_: any, formData: FormData) {
+	const data = {
+		keyword: formData.get("keyword"),
+	};
+	const result = await searhSchema.safeParseAsync(data);
+	console.log(result);
+	if (!result.success) {
+		return result.error.flatten();
+	} else {
+		const tweets = await db.tweet.findMany({
+			where: {
+				OR: [
+					{
+						context: {
+							contains: result.data.keyword,
+						},
+					},
+				],
+			},
+		});
+		console.log(tweets);
+	}
+}
