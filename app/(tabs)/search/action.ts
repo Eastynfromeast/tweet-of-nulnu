@@ -1,6 +1,8 @@
+"use server";
+
 import db from "@/lib/db";
 
-export async function searchTweet(keyword: string) {
+export async function getSearchTweet(keyword: string) {
 	const tweets = await db.tweet.findMany({
 		where: {
 			OR: [
@@ -11,6 +13,18 @@ export async function searchTweet(keyword: string) {
 				},
 			],
 		},
+		select: {
+			id: true,
+			created_at: true,
+			updated_at: true,
+			context: true,
+			user: {
+				select: {
+					id: true,
+					username: true,
+				},
+			},
+		},
 	});
-	console.log(tweets);
+	return tweets;
 }
