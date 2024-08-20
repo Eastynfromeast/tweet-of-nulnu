@@ -3,10 +3,17 @@
 import { validateSearchKeyword } from "@/app/(tabs)/action";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
+import { useParams } from "next/navigation";
+import { useEffect, useState } from "react";
 import { useFormState } from "react-dom";
 
 export default function SearchBar() {
 	const [state, dispatch] = useFormState(validateSearchKeyword, null);
+	const [keywordValue, setKeywordValue] = useState("");
+	const params = useParams();
+	useEffect(() => {
+		setKeywordValue("");
+	}, [params]);
 	return (
 		<header className="bg-gray-950 text-gray-100 py-4 px-5 flex items-center justify-between">
 			<h1 className="font-bold">
@@ -21,6 +28,8 @@ export default function SearchBar() {
 					</button>
 					<input
 						name="keyword"
+						value={keywordValue}
+						onChange={e => setKeywordValue(e.currentTarget.value)}
 						type="text"
 						placeholder="찾고 싶은 트윗이 있나요?"
 						className="pl-8 text-sm py-1 bg-transparent border-b-[1px] border-b-gray-100 outline-none placeholder:text-gray-400 focus:outline-dashed focus:outline-2 focus:outline-green-400 focus:bg-neutral-900 "

@@ -1,6 +1,6 @@
+import { getSearchedTweet } from "./action";
 import { notFound } from "next/navigation";
 import TweetSearchList from "@/components/tweet/tweet-search-list";
-import { getSearchedTweet } from "./action";
 
 // export const dynamicParams = true;
 
