@@ -1,7 +1,7 @@
-import TweetList from "@/components/tweet/tweet-list";
+import Link from "next/link";
 import { getUser } from "./action";
 import TweetListItem from "@/components/tweet/tweet-list-item";
-import FormButton from "@/components/form/form-button";
+import ButtonLogout from "@/components/form/button-logout";
 
 export default async function User({ params }: { params: { id: string } }) {
 	console.log(params.id);
@@ -28,9 +28,12 @@ export default async function User({ params }: { params: { id: string } }) {
 						<p>{user?.bio ? user.bio : "자기 소개를 적어주세요"}</p>
 					</li>
 					<li className="w-full">
-						<form className="w-full">
-							<FormButton text="Edit Profile" />
-						</form>
+						<Link
+							href={`/users/${user?.username}/edit`}
+							className="w-full p-3 rounded-3xl mt-3 text-center bg-blue-500 text-white font-medium hover:bg-green-500 transition disabled:bg-neutral-400 disabled:text-neutral-100"
+						>
+							Edit Profile
+						</Link>
 					</li>
 				</ul>
 			</section>
@@ -43,6 +46,7 @@ export default async function User({ params }: { params: { id: string } }) {
 					))}
 				</ul>
 			</section>
+			<ButtonLogout />
 		</div>
 	);
 }

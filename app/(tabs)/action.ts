@@ -1,6 +1,7 @@
 "use server";
 
 import db from "@/lib/db";
+import getSession from "@/lib/session";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
@@ -49,4 +50,10 @@ export async function validateSearchKeyword(_: any, formData: FormData) {
 		revalidatePath(`/search?keyword=${encodedKeyword}`);
 		redirect(`/search?keyword=${encodedKeyword}`);
 	}
+}
+
+export async function logOut() {
+	const session = await getSession();
+	await session.destroy();
+	redirect("/start");
 }
