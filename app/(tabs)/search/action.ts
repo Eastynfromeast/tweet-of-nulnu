@@ -1,8 +1,9 @@
 "use server";
 
 import db from "@/lib/db";
+import { revalidatePath } from "next/cache";
 
-export async function getSearchTweet(keyword: string) {
+export async function getSearchedTweet(keyword: string) {
 	const tweets = await db.tweet.findMany({
 		where: {
 			OR: [

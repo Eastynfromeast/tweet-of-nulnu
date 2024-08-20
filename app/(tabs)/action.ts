@@ -1,6 +1,7 @@
 "use server";
 
 import db from "@/lib/db";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 
@@ -40,23 +41,12 @@ export async function validateSearchKeyword(_: any, formData: FormData) {
 		keyword: formData.get("keyword"),
 	};
 	const result = await searhSchema.safeParseAsync(data);
-	console.log(result);
+
 	if (!result.success) {
 		return result.error.flatten();
 	} else {
-		// const tweets = await db.tweet.findMany({
-		// 	where: {
-		// 		OR: [
-		// 			{
-		// 				context: {
-		// 					contains: result.data.keyword,
-		// 				},
-		// 			},
-		// 		],
-		// 	},
-		// });
-		// console.log(tweets);
 		const encodedKeyword = encodeURI(result.data.keyword);
+		revalidatePath(`/search?keyword=${encodedKeyword}`);
 		redirect(`/search?keyword=${encodedKeyword}`);
 	}
 }

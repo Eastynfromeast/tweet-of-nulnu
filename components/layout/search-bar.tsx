@@ -2,13 +2,18 @@
 
 import { validateSearchKeyword } from "@/app/(tabs)/action";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
+import Link from "next/link";
 import { useFormState } from "react-dom";
 
 export default function SearchBar() {
 	const [state, dispatch] = useFormState(validateSearchKeyword, null);
 	return (
 		<header className="bg-gray-950 text-gray-100 py-4 px-5 flex items-center justify-between">
-			<h1 className="font-bold">Tweet of Nulnu</h1>
+			<h1 className="font-bold">
+				<Link href="/" className="hover:text-green-400">
+					Tweet of Nulnu
+				</Link>
+			</h1>
 			<div>
 				<form action={dispatch} className="flex flex-col gap-1.5 relative">
 					<button className="absolute top-1 left-1">
