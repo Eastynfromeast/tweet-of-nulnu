@@ -10,7 +10,7 @@ export default async function SearchPage({ searchParams }: { searchParams: { key
 		notFound();
 	}
 
-	const [tweets] = await Promise.all([getSearchedTweet(keyword)]);
+	const tweets = await getSearchedTweet(keyword);
 
 	return (
 		<div className="flex flex-col items-center min-h-screen px-5 pt-6">

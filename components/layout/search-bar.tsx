@@ -32,7 +32,7 @@ export default function SearchBar() {
 						onChange={e => setKeywordValue(e.currentTarget.value)}
 						type="text"
 						placeholder="찾고 싶은 트윗이 있나요?"
-						className="pl-8 text-sm py-1 bg-transparent border-b-[1px] border-b-gray-100 outline-none placeholder:text-gray-400 focus:outline-dashed focus:outline-2 focus:outline-green-400 focus:bg-neutral-900 "
+						className="pl-8 text-sm py-1 bg-transparent border-b-[1px] border-b-gray-100 outline-none placeholder:text-gray-400 focus:outline-dashed focus:outline-2 focus:outline-green-400 active:bg-transparent"
 					/>
 					{state?.fieldErrors.keyword && <p className="text-red-500 text-xs">{state?.fieldErrors.keyword}</p>}
 				</form>

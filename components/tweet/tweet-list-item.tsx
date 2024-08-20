@@ -13,9 +13,9 @@ interface TweetListProps {
 
 export default function TweetListItem({ context, id, created_at, user }: TweetListProps) {
 	return (
-		<li className="w-full">
-			<Link href={`/tweets/${id}`} className="grid grid-cols-[126px_1fr] gap-5 border-b-gray-500 border-b-[1px] pb-4">
-				<div className="bg-gray-500 size-28 rounded-md" />
+		<li className="w-full border-b-gray-500 border-b-[1px] pb-4">
+			<Link href={`/tweets/${id}`} className="grid grid-cols-[126px_1fr] gap-5 ">
+				<div className="bg-gray-500 size-28 rounded-full" />
 				<div className="flex flex-col gap-3  w-full ">
 					<div className="flex flex-row justify-between *:text-sm">
 						<h4 className="font-semibold">{user.username}</h4>

@@ -35,4 +35,7 @@ body {
 	.btn {
 		@apply w-full p-3 rounded-3xl mt-3 bg-blue-500 text-white font-medium hover:bg-green-500 transition disabled:bg-neutral-400 disabled:text-neutral-100;
 	}
+	.container-basic {
+		@apply flex flex-col items-center min-h-screen px-5 pt-6;
+	}
 }
