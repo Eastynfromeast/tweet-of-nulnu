@@ -6,8 +6,7 @@ import bcrypt from "bcrypt";
 import db from "@/lib/db";
 import getSession from "@/lib/session";
 import { redirect } from "next/navigation";
-
-const checkPassword = ({ password, confirmPassword }: { password: string; confirmPassword: string }) => password === confirmPassword;
+import { checkPassword } from "@/lib/utils";
 
 const formSchema = z
 	.object({

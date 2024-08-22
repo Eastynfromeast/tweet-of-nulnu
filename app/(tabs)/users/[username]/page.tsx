@@ -3,9 +3,9 @@ import { getUser } from "./action";
 import TweetListItem from "@/components/tweet/tweet-list-item";
 import ButtonLogout from "@/components/form/button-logout";
 
-export default async function User({ params }: { params: { id: string } }) {
-	console.log(params.id);
-	const user = await getUser(params.id);
+export default async function User({ params }: { params: { username: string } }) {
+	console.log(params.username);
+	const user = await getUser(params.username);
 	return (
 		<div className="container-basic mb-20 *:w-full">
 			<h2 className="mb-5 text-lg font-bold text-neutral-400">Profile</h2>
@@ -37,7 +37,6 @@ export default async function User({ params }: { params: { id: string } }) {
 					</li>
 				</ul>
 			</section>
-
 			<section>
 				<h2 className="mb-5 text-lg font-bold text-neutral-400">Tweets</h2>
 				<ul className="flex flex-col gap-5 last:border-b-0">

@@ -6,3 +6,5 @@ export function formatToTimeAgo(date: string) {
 	const formatter = new Intl.RelativeTimeFormat("ko");
 	return formatter.format(diff, "days");
 }
+
+export const checkPassword = ({ password, confirmPassword }: { password: string; confirmPassword: string }) => password === confirmPassword;

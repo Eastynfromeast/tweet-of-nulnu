@@ -8,7 +8,10 @@ interface FormInputProps {
 
 export default function FormInput({ name, errors = [], icon, ...rest }: FormInputProps & InputHTMLAttributes<HTMLInputElement>) {
 	return (
-		<div className="flex flex-col gap-2 text-sm">
+		<div className="grid grid-cols-[min(75px)_1fr] items-center gap-3 text-sm">
+			<label htmlFor={name} className="capitalize font-semibold text-sm">
+				{name}
+			</label>
 			<div className="w-full relative text-black">
 				<span className="size-4 block absolute top-1/2 -translate-y-1/2 -mt-[2px] left-4 text-gray-400 ">
 					{icon ? (
@@ -24,7 +27,7 @@ export default function FormInput({ name, errors = [], icon, ...rest }: FormInpu
 					)}
 				</span>
 				<input
-					className="py-3 pr-3 pl-10 w-full rounded-3xl outline-none ring ring-transparent bg-white focus:ring-orange-500 focus:outline-orange-300 invalid:ring-red-400 empty:ring-gray-300 empty:ring-1"
+					className="py-3 pr-3 pl-10 w-full rounded-2xl outline-none ring ring-transparent bg-white focus:ring-orange-500 focus:outline-orange-300 invalid:ring-red-400 empty:ring-gray-300 empty:ring-1"
 					name={name}
 					{...rest}
 				/>

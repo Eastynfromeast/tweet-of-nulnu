@@ -116,7 +116,7 @@ export default async function TweetDetail({ params }: { params: { id: string } }
 	const session = await getSession();
 	const sessionId = session.id;
 	return (
-		<div className="flex flex-col gap-5 px-5 pt-6 pb-10 *:w-full">
+		<div className="flex flex-col gap-5 px-5 pt-6 pb-10 min-h-screen *:w-full">
 			<TweetDetailItem tweet={tweet} likeCount={likeCount} isLiked={isLiked} />
 			<section className=" border-t-[1px] border-dashed border-neutral-500 mt-10 py-4">
 				<h4 className="font-semibold text-lg">

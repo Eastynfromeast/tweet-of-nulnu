@@ -4,7 +4,6 @@ import { HomeIcon, UserIcon } from "@heroicons/react/24/outline";
 import { HomeIcon as SolidHomeIcon, UserIcon as SolidUserIcon } from "@heroicons/react/24/solid";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import TabLogoutButton from "../form/button-logout";
 
 export default function TabBar({ username }: { username: string }) {
 	const pathname = usePathname();
