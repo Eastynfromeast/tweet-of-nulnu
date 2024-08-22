@@ -1,7 +1,10 @@
+"use server";
+
 import { z } from "zod";
 import { EMAIL_REGEX, NAME_MIN_LENGTH, PW_MIN_LENGTH } from "@/lib/constants";
 import db from "@/lib/db";
-import { checkPassword } from "@/lib/utils";
+
+const checkNewPassword = ({ newPassword, confirmNewPassword }: { newPassword: string; confirmNewPassword: string }) => newPassword === confirmNewPassword;
 
 export const userSchema = z
 	.object({
@@ -20,12 +23,11 @@ export const userSchema = z
 			.email()
 			.trim()
 			.regex(EMAIL_REGEX, "Email must be ended with @zod.com"),
-		password: z
-			.string({
-				required_error: "Password is required",
-			})
-			.min(PW_MIN_LENGTH, `Password should be more than ${PW_MIN_LENGTH} letters`),
-		confirmPassword: z.string().min(PW_MIN_LENGTH),
+		password: z.string({
+			required_error: "Password is required",
+		}),
+		newPassword: z.string().min(PW_MIN_LENGTH, `Password should be more than ${PW_MIN_LENGTH} letters`),
+		confirmNewPassword: z.string().min(PW_MIN_LENGTH),
 		bio: z.string(),
 	})
 	.superRefine(async ({ email }, ctx) => {
@@ -47,9 +49,9 @@ export const userSchema = z
 			return z.NEVER;
 		}
 	})
-	.refine(checkPassword, { message: "Both passwords should be the same", path: ["confirmPassword"] });
+	.refine(checkNewPassword, { message: "Both passwords should be the same", path: ["confirmPassword"] });
 
-export type UserSchema = z.infer<typeof userSchema>;
+export type UserFormType = z.infer<typeof userSchema>;
 
 const mb = 1024 * 1024;
 const sizeLimit = mb * 2;

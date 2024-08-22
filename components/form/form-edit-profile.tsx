@@ -4,11 +4,11 @@ import { UserInfo } from "@/app/(tabs)/users/[username]/edit/page";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import FormButton from "./form-button";
-import { UserSchema, fileSchema, userSchema } from "@/app/(tabs)/users/[username]/edit/schema";
+import { UserFormType, fileSchema, userSchema } from "@/app/(tabs)/users/[username]/edit/schema";
 import { useState } from "react";
 import { PhotoIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
-import { getUploadUrl } from "@/app/(tabs)/users/[username]/edit/action";
+import { getUploadUrl, updateUserProfile } from "@/app/(tabs)/users/[username]/edit/action";
 import RhfInput from "./rhf-input";
 
 interface FormEditProfileProps {
@@ -26,8 +26,15 @@ export default function FormEditProfile({ userInfo }: FormEditProfileProps) {
 		setValue,
 		setError,
 		formState: { errors },
-	} = useForm<UserSchema>({
+	} = useForm<UserFormType>({
 		resolver: zodResolver(userSchema),
+		defaultValues: {
+			username: userInfo?.username,
+			email: userInfo?.email,
+			password: userInfo?.password,
+			bio: userInfo?.bio ? userInfo.bio : "",
+			avatar: userInfo?.avatar ? userInfo.avatar : "",
+		},
 	});
 
 	const onImageChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -56,24 +63,56 @@ export default function FormEditProfile({ userInfo }: FormEditProfileProps) {
 		}
 	};
 
+	const dispatch = handleSubmit(async (data: UserFormType) => {
+		if (file) {
+			const cloudflareForm = new FormData();
+			cloudflareForm.append("file", file);
+			const response = await fetch(uploadUrl, {
+				method: "POST",
+				body: cloudflareForm,
+			});
+			if (response.status !== 200) {
+				return;
+			}
+		}
+		const formData = new FormData();
+		formData.append("avatar", data.avatar);
+		formData.append("username", data.username);
+		formData.append("email", data.email);
+		formData.append("password", data.password);
+		formData.append("password", data.newPassword);
+		formData.append("confirmPassword", data.confirmNewPassword);
+		formData.append("bio", data.bio);
+		console.log(formData);
+		const errors = await updateUserProfile(formData);
+		if (errors) {
+			console.log(errors);
+		}
+	});
+
+	const onValid = async () => {
+		await dispatch();
+	};
 	return (
-		<form className="flex flex-col gap-3 md:px-5">
+		<form action={onValid} className="flex flex-col gap-3 md:px-5">
 			<div className="flex flex-col justify-center items-center gap-3 mb-5">
 				<label
 					htmlFor="avatar"
-					className={`size-44 rounded-full text-neutral-100 border-2 border-neutral-100 border-dashed flex flex-col justify-center items-center gap-1 cursor-pointer transition hover:text-green-400 hover:border-green-400`}
+					className={`size-44 rounded-full flex flex-col justify-center items-center gap-1 cursor-pointer transition hover:text-green-400 hover:border-green-400 bg-cover`}
+					style={{
+						backgroundImage: `url(${preview})`,
+					}}
 				>
-					{userInfo?.avatar ? (
-						<Image src={userInfo.avatar} alt={userInfo.username} />
-					) : (
-						<>
+					{userInfo?.avatar && <Image src={userInfo.avatar} alt={userInfo.username} />}
+					{preview === "" && (
+						<div className="w-full h-full text-neutral-100 border-2 border-neutral-100 border-dashed rounded-full flex flex-col justify-center items-center gap-1">
 							<PhotoIcon className="size-12" />
 							<span className="px-5 text-xs text-center font-semibold">
 								프로필 이미지
 								<br />
 								추가하기
 							</span>
-						</>
+						</div>
 					)}
 				</label>
 				<input onChange={onImageChange} type="file" id="avatar" name="avatar" accept="image/*" className="hidden" />
@@ -82,14 +121,27 @@ export default function FormEditProfile({ userInfo }: FormEditProfileProps) {
 			</div>
 			<RhfInput placeholder={userInfo?.username} icon="👤" type="text" required {...register("username")} errors={[errors?.username?.message ?? ""]} />
 			<RhfInput placeholder={userInfo?.email} icon="💌" type="email" required {...register("email")} errors={[errors?.email?.message ?? ""]} />
-			<RhfInput placeholder="비밀번호를 입력해주세요" icon="🔑" type="password" required {...register("password")} errors={[errors?.password?.message ?? ""]} />
 			<RhfInput
-				placeholder="비밀번호를 입력해주세요"
-				icon="✔️"
+				placeholder="기존 비밀번호를 입력해주세요"
+				icon="🔑"
 				type="password"
 				required
-				{...register("confirmPassword")}
-				errors={[errors?.confirmPassword?.message ?? ""]}
+				{...register("password")}
+				errors={[errors?.password?.message ?? ""]}
+			/>
+			<RhfInput
+				placeholder="새로운 비밀번호를 입력해주세요"
+				icon="🆕"
+				type="password"
+				{...register("newPassword")}
+				errors={[errors?.newPassword?.message ?? ""]}
+			/>
+			<RhfInput
+				placeholder="새로운 비밀번호를 확인해주세요"
+				icon="✔️"
+				type="password"
+				{...register("confirmNewPassword")}
+				errors={[errors?.confirmNewPassword?.message ?? ""]}
 			/>
 			<RhfInput
 				placeholder={userInfo?.bio ? userInfo.bio : "멋진 이력을 적어주세요"}
