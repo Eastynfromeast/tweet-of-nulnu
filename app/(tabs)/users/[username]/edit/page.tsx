@@ -21,7 +21,6 @@ export default async function EditUserProfile({ params }: { params: { username: 
 	}
 	const user = await getUserInfo(username);
 	console.log(user);
-
 	return (
 		<div className="container-basic mb-20 *:w-full">
 			<h2 className="mb-5 text-lg font-bold text-white">Edit Profile</h2>

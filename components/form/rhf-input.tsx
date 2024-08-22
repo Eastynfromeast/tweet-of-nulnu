@@ -8,8 +8,8 @@ interface FormInputProps {
 
 function RhfInput({ name, errors = [], icon, ...rest }: FormInputProps & InputHTMLAttributes<HTMLInputElement>, ref: ForwardedRef<HTMLInputElement>) {
 	return (
-		<div className="grid grid-cols-[min(80px)_1fr] items-center gap-3 text-sm">
-			<label htmlFor={name} className="capitalize font-semibold text-sm break-words">
+		<div className="flex items-center flex-wrap gap-3 text-sm">
+			<label htmlFor={name} className="capitalize font-semibold text-sm break-words min-w-[80px]">
 				{name === "confirmPassword" ? "confirm password" : name}
 			</label>
 			<div className="w-full relative text-black">
@@ -33,11 +33,13 @@ function RhfInput({ name, errors = [], icon, ...rest }: FormInputProps & InputHT
 					{...rest}
 				/>
 			</div>
-			{errors?.map((error, index) => (
-				<p key={index} className="text-red-500 font-medium px-2">
-					{error}
-				</p>
-			))}
+			<ul className="w-full">
+				{errors?.map((error, index) => (
+					<li key={index} className="text-red-500 font-medium px-2">
+						{error}
+					</li>
+				))}
+			</ul>
 		</div>
 	);
 }

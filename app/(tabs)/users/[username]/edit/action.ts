@@ -1,15 +1,16 @@
 "use server";
 
-import getSession from "@/lib/session";
-import { userSchema } from "./schema";
 import db from "@/lib/db";
+import fs from "fs/promises";
+import getSession from "@/lib/session";
 import bcrypt from "bcrypt";
+import { userSchema } from "./schema";
 
 export async function getUploadUrl() {
 	const response = await fetch(`https://api.cloudflare.com/client/v4/accounts/${process.env.CLOUD_ACCOUNT_ID}/images/v2/direct_upload`, {
 		method: "POST",
 		headers: {
-			Authorization: `Bearer ${process.env.CLOUD_API_KEY},`,
+			Authorization: `Bearer ${process.env.CLOUD_API_KEY}`,
 		},
 	});
 	const data = await response.json();
@@ -23,11 +24,20 @@ export async function updateUserProfile(formData: FormData) {
 		bio: formData.get("bio"),
 		avatar: formData.get("avatar"),
 		password: formData.get("password"),
-		newPassword: formData.get("newPassword"),
-		confirmNewPassword: formData.get("confirmNewPassword"),
+		newPassword: formData.get("newPassword") ?? "",
+		confirmNewPassword: formData.get("confirmNewPassword") ?? "",
 	};
-	const result = userSchema.safeParse(data);
+	console.log("받아온 폼 데이터", data);
+	if (data.avatar instanceof File) {
+		const avatarData = await data.avatar.arrayBuffer();
+		await fs.appendFile(`./public/images/${data.avatar.name}`, Buffer.from(avatarData));
+		data.avatar = `/images/${data.avatar.name}`;
+	}
+	const result = await userSchema.safeParseAsync(data);
+
+	console.log("폼 검증 성공 결과 ", result);
 	if (!result.success) {
+		console.log(result.error.flatten());
 		return result.error.flatten();
 	} else {
 		const session = await getSession();
@@ -41,10 +51,13 @@ export async function updateUserProfile(formData: FormData) {
 					password: true,
 				},
 			});
+			console.log("prevUserId", prevUserInfo);
 			const ok = await bcrypt.compare(result.data.password, prevUserInfo!.password ?? "xxxx");
+			console.log(ok);
 			if (ok) {
-				const newPassword = result.data.newPassword === "" ? result.data.password : result.data.newPassword;
-				const hasedPassword = await bcrypt.hash(newPassword, 12);
+				console.log(result.data.newPassword);
+				const newPassword = result.data.newPassword === undefined ? result.data.password : result.data.newPassword;
+				const hashedPassword = await bcrypt.hash(newPassword, 12);
 				const user = await db.user.update({
 					where: {
 						id: session.id,
@@ -52,12 +65,9 @@ export async function updateUserProfile(formData: FormData) {
 					data: {
 						email: result.data.email,
 						username: result.data.username,
-						password: hasedPassword,
+						password: hashedPassword,
 						bio: result.data.bio,
 						avatar: result.data.avatar,
-					},
-					select: {
-						id: true,
 					},
 				});
 				console.log(user);
@@ -68,9 +78,9 @@ export async function updateUserProfile(formData: FormData) {
 						username: [],
 						bio: [],
 						avatar: formData.get("avatar"),
-						prevPassword: ["기존 비밀번호와 일치하지 않습니다"],
-						password: [],
-						confirmPassword: [],
+						password: ["기존 비밀번호와 일치하지 않습니다"],
+						newPassword: [],
+						confirmNewPassword: [],
 					},
 				};
 			}
