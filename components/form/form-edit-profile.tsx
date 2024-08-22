@@ -1,15 +1,15 @@
 "use client";
 
 import { UserInfo } from "@/app/(tabs)/users/[username]/edit/page";
-
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import FormButton from "./form-button";
-import FormInput from "./form-input";
 import { UserSchema, fileSchema, userSchema } from "@/app/(tabs)/users/[username]/edit/schema";
 import { useState } from "react";
 import { PhotoIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
+import { getUploadUrl } from "@/app/(tabs)/users/[username]/edit/action";
+import RhfInput from "./rhf-input";
 
 interface FormEditProfileProps {
 	userInfo: UserInfo;
@@ -41,6 +41,18 @@ export default function FormEditProfile({ userInfo }: FormEditProfileProps) {
 		const result = fileSchema.safeParse(file);
 		if (!result.success) {
 			setFileError(result.error.flatten().fieldErrors.size || ["이미지 파일만 업로드 가능합니다."]);
+		} else {
+			const url = URL.createObjectURL(file);
+			setPreview(url);
+			setFile(file);
+			setFileError([]);
+
+			const { success, result } = await getUploadUrl();
+			if (success) {
+				const { id, uploadUrl } = result;
+				setUploadUrl(uploadUrl);
+				setValue("avatar", `https://imagedelivery.net/q-lAPPNo8Q6bxo1lIjEnjA/${id}`);
+			}
 		}
 	};
 
@@ -68,17 +80,10 @@ export default function FormEditProfile({ userInfo }: FormEditProfileProps) {
 				{fileError !== null && <p className="text-red-600">{fileError[0]}</p>}
 				{errors.avatar?.message && <p className="text-red-600">{errors.avatar.message}</p>}
 			</div>
-			<FormInput placeholder={userInfo?.username} icon="👤" type="text" required {...register("username")} errors={[errors?.username?.message ?? ""]} />
-			<FormInput placeholder={userInfo?.email} icon="💌" type="email" required {...register("email")} errors={[errors?.email?.message ?? ""]} />
-			<FormInput
-				placeholder="비밀번호를 입력해주세요"
-				icon="🔑"
-				type="password"
-				required
-				{...register("password")}
-				errors={[errors?.password?.message ?? ""]}
-			/>
-			<FormInput
+			<RhfInput placeholder={userInfo?.username} icon="👤" type="text" required {...register("username")} errors={[errors?.username?.message ?? ""]} />
+			<RhfInput placeholder={userInfo?.email} icon="💌" type="email" required {...register("email")} errors={[errors?.email?.message ?? ""]} />
+			<RhfInput placeholder="비밀번호를 입력해주세요" icon="🔑" type="password" required {...register("password")} errors={[errors?.password?.message ?? ""]} />
+			<RhfInput
 				placeholder="비밀번호를 입력해주세요"
 				icon="✔️"
 				type="password"
@@ -86,7 +91,7 @@ export default function FormEditProfile({ userInfo }: FormEditProfileProps) {
 				{...register("confirmPassword")}
 				errors={[errors?.confirmPassword?.message ?? ""]}
 			/>
-			<FormInput
+			<RhfInput
 				placeholder={userInfo?.bio ? userInfo.bio : "멋진 이력을 적어주세요"}
 				icon="😎"
 				type="text"
