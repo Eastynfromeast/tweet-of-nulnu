@@ -20,7 +20,7 @@ export default async function EditUserProfile({ params }: { params: { username: 
 		notFound();
 	}
 	const user = await getUserInfo(username);
-	console.log("유저 프로필 수정 페이지 초기 유저 정보 : ", user);
+
 	return (
 		<div className="container-basic mb-20 *:w-full">
 			<h2 className="mb-5 text-lg font-bold text-white">Edit Profile</h2>

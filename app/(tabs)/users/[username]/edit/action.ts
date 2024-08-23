@@ -4,8 +4,9 @@ import db from "@/lib/db";
 import fs from "fs/promises";
 import getSession from "@/lib/session";
 import bcrypt from "bcrypt";
-import { checkNewPassword, userSchema } from "./schema";
 import { redirect } from "next/navigation";
+import { checkNewPassword, userSchema } from "@/lib/schema";
+import { revalidatePath } from "next/cache";
 
 export async function getUploadUrl() {
 	const response = await fetch(`https://api.cloudflare.com/client/v4/accounts/${process.env.CLOUD_ACCOUNT_ID}/images/v2/direct_upload`, {
@@ -28,7 +29,6 @@ export async function updateUserProfile(formData: FormData) {
 		newPassword: formData.get("newPassword"),
 		confirmNewPassword: formData.get("confirmNewPassword"),
 	};
-	console.log("받아온 폼 데이터", data);
 
 	if (data.avatar instanceof File) {
 		const avatarData = await data.avatar.arrayBuffer();
@@ -36,10 +36,7 @@ export async function updateUserProfile(formData: FormData) {
 		data.avatar = `/images/${data.avatar.name}`;
 	}
 
-	// .refine(checkNewPassword, { message: "Both passwords should be the same", path: ["confirmNewPassword"] });
-
 	const result = await userSchema.safeParseAsync(data);
-	console.log("폼 검증 성공 결과 ", result);
 
 	if (result.data?.confirmNewPassword && result.data.newPassword) {
 		const isNewPasswordConfirmed = checkNewPassword(result.data?.newPassword, result.data?.confirmNewPassword);
@@ -50,7 +47,6 @@ export async function updateUserProfile(formData: FormData) {
 		console.log(result.error.flatten());
 		return result.error.flatten();
 	} else {
-		console.log(result.data);
 		const session = await getSession();
 		if (session.id) {
 			const prevUserInfo = await db.user.findUnique({
@@ -62,18 +58,15 @@ export async function updateUserProfile(formData: FormData) {
 					password: true,
 				},
 			});
-			console.log("prevUserId", prevUserInfo);
 
 			const isValidPassword = await bcrypt.compare(result.data.password, prevUserInfo!.password ?? "xxxx");
 			if (!isValidPassword) {
 				return { fieldErrors: { password: ["비밀번호를 확인해주세요."] } };
 			}
 			console.log("bcrypt result is", isValidPassword);
-			console.log("새로운 비밀번호 : ", result.data.newPassword);
+
 			if (result.data && result.data.newPassword) {
-				console.log(result.data.newPassword);
 				const newHashedPassword = await bcrypt.hash(result.data?.newPassword, 12);
-				console.log(newHashedPassword);
 
 				const user = await db.user.update({
 					where: {
@@ -88,6 +81,7 @@ export async function updateUserProfile(formData: FormData) {
 					},
 				});
 				console.log(user);
+				revalidatePath(`/users/${data.username}`);
 				return redirect(`/users/${data.username}`);
 			}
 
@@ -103,6 +97,7 @@ export async function updateUserProfile(formData: FormData) {
 				},
 			});
 			console.log(user);
+			revalidatePath(`/users/${data.username}`);
 			return redirect(`/users/${data.username}`);
 		}
 	}

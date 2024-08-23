@@ -1,75 +1,10 @@
 "use server";
 
-import { EMAIL_REGEX, NAME_MIN_LENGTH, PW_MIN_LENGTH } from "@/lib/constants";
-import { z } from "zod";
 import bcrypt from "bcrypt";
 import db from "@/lib/db";
 import getSession from "@/lib/session";
 import { redirect } from "next/navigation";
-import { checkPassword } from "@/lib/utils";
-
-const formSchema = z
-	.object({
-		email: z
-			.string({
-				required_error: "Email is required",
-			})
-			.email()
-			.trim()
-			.regex(EMAIL_REGEX, "Email must be ended with @zod.com"),
-		username: z
-			.string({
-				required_error: "Username is required",
-			})
-			.min(NAME_MIN_LENGTH, `Username should be at least ${NAME_MIN_LENGTH} characters long`)
-			.trim()
-			.toLowerCase(),
-		password: z
-			.string({
-				required_error: "Password is required",
-			})
-			.min(PW_MIN_LENGTH, `Password should be more than ${PW_MIN_LENGTH} letters`),
-		confirmPassword: z.string().min(PW_MIN_LENGTH),
-	})
-	.superRefine(async ({ username }, ctx) => {
-		const user = await db.user.findUnique({
-			where: {
-				username,
-			},
-			select: {
-				id: true,
-			},
-		});
-		if (user) {
-			ctx.addIssue({
-				code: "custom",
-				path: ["username"],
-				message: "This username is already taken",
-				fatal: true,
-			});
-			return z.NEVER;
-		}
-	})
-	.superRefine(async ({ email }, ctx) => {
-		const user = await db.user.findUnique({
-			where: {
-				email,
-			},
-			select: {
-				id: true,
-			},
-		});
-		if (user) {
-			ctx.addIssue({
-				code: "custom",
-				path: ["email"],
-				message: "This email is already taken",
-				fatal: true,
-			});
-			return z.NEVER;
-		}
-	})
-	.refine(checkPassword, { message: "Both passwords should be the same", path: ["confirmPassword"] });
+import { accountSchema } from "@/lib/schema";
 
 export async function createAccount(prevState: any, formData: FormData) {
 	const data = {
@@ -78,7 +13,7 @@ export async function createAccount(prevState: any, formData: FormData) {
 		password: formData.get("password"),
 		confirmPassword: formData.get("confirmPassword"),
 	};
-	const result = await formSchema.safeParseAsync(data);
+	const result = await accountSchema.safeParseAsync(data);
 	console.log(result);
 	if (!result.success) {
 		console.log(result.error.flatten());

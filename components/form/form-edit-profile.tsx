@@ -1,15 +1,15 @@
 "use client";
 
+import Image from "next/image";
 import { UserInfo } from "@/app/(tabs)/users/[username]/edit/page";
+import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import FormButton from "./form-button";
-import { fileSchema, userSchema } from "@/app/(tabs)/users/[username]/edit/schema";
-import { useEffect, useState } from "react";
-import { PhotoIcon } from "@heroicons/react/24/outline";
-import Image from "next/image";
+import { PlusCircleIcon } from "@heroicons/react/24/outline";
 import { getUploadUrl, updateUserProfile } from "@/app/(tabs)/users/[username]/edit/action";
 import RhfInput from "./rhf-input";
+import { fileSchema, userSchema } from "@/lib/schema";
 
 interface FormEditProfileProps {
 	userInfo: UserInfo;
@@ -64,7 +64,7 @@ export default function FormEditProfile({ userInfo }: FormEditProfileProps) {
 			setPreview(url);
 			setFile(file);
 			setFileError([]);
-			// 여기가 안된다!
+
 			const { success, result } = await getUploadUrl();
 			if (success) {
 				const { id, uploadURL } = result;
@@ -87,9 +87,7 @@ export default function FormEditProfile({ userInfo }: FormEditProfileProps) {
 				return;
 			}
 		}
-		console.log("들어온 데이터", data);
-		console.log("변경될 비밀번호 :", data.newPassword);
-		console.log("폼 제출 시 : ", uploadUrl);
+
 		const formData = new FormData();
 		formData.append("avatar", data.avatar);
 		formData.append("username", data.username);
@@ -99,8 +97,6 @@ export default function FormEditProfile({ userInfo }: FormEditProfileProps) {
 		formData.append("confirmNewPassword", data.confirmNewPassword);
 		formData.append("bio", data.bio);
 
-		console.log("새로운 폼 데이터의 새로운 비밀번호", formData.get("newPassword"));
-
 		const errors = await updateUserProfile(formData);
 		setError("password", { message: errors?.fieldErrors.password?.at(0) });
 	});
@@ -108,24 +104,24 @@ export default function FormEditProfile({ userInfo }: FormEditProfileProps) {
 	const onValid = async () => {
 		await onSubmit();
 	};
-	console.log(errors);
+
 	return (
 		<form action={onValid} className="flex flex-col gap-3 md:px-5">
 			<label
 				htmlFor="avatar"
-				className={`self-center size-44 rounded-full flex flex-col justify-center items-center gap-1 cursor-pointer transition hover:text-green-400 hover:border-green-400 bg-cover`}
+				className={`self-center size-44 rounded-full flex flex-col justify-center items-center gap-1 cursor-pointer transition hover:text-green-400 hover:border-green-400 bg-cover empty:border-2 empty:border-neutral-100 empty:border-dashed empty:text-opacity-100 relative group `}
 				style={{
 					backgroundImage: `url(${preview})`,
 				}}
 			>
-				{userInfo?.avatar && <Image src={userInfo.avatar} alt={userInfo.username} />}
+				{userInfo?.avatar && <Image width={128} height={128} src={`${userInfo.avatar}/avatar`} alt={userInfo.username} className="size-44 rounded-full" />}
 				{preview === "" && (
-					<div className="w-full h-full text-neutral-100 border-2 border-neutral-100 border-dashed rounded-full flex flex-col justify-center items-center gap-1">
-						<PhotoIcon className="size-12" />
+					<div className={`w-full h-full  rounded-full flex flex-col justify-center items-center gap-1 absolute top-0 opacity-50 group-hover:opacity-100`}>
+						<PlusCircleIcon className="size-12" />
 						<span className="px-5 text-xs text-center font-semibold">
 							프로필 이미지
 							<br />
-							추가하기
+							{userInfo?.avatar ? "변경하기" : "추가하기"}
 						</span>
 					</div>
 				)}

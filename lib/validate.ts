@@ -27,6 +27,18 @@ export async function hasUserEmailTaken(email: string) {
 	return Boolean(user);
 }
 
+export async function isEmailExits(email: string) {
+	const user = await db.user.findUnique({
+		where: {
+			email,
+		},
+		select: {
+			id: true,
+		},
+	});
+	return Boolean(user);
+}
+
 export async function validateUserName(username: string) {
 	const session = await getSession();
 	const user = await db.user.findUnique({

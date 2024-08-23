@@ -1,24 +1,15 @@
 "use server";
 
 import db from "@/lib/db";
+import { tweetSchema } from "@/lib/schema";
 import getSession from "@/lib/session";
 import { redirect } from "next/navigation";
-import { z } from "zod";
-
-const formSchema = z.object({
-	newTweet: z
-		.string({
-			required_error: "트윗 내용을 적어주세요.",
-		})
-		.min(10, "10자 이상 적어주세요")
-		.max(280, "280자까지 작성 가능합니다."),
-});
 
 export default async function addTweet(_: any, formData: FormData) {
 	const data = {
 		newTweet: formData.get("newTweet"),
 	};
-	const result = await formSchema.safeParseAsync(data);
+	const result = await tweetSchema.safeParseAsync(data);
 	if (!result.success) {
 		return result.error.flatten();
 	} else {

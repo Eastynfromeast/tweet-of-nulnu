@@ -1,9 +1,9 @@
 "use server";
 
 import db from "@/lib/db";
+import { commentSchema } from "@/lib/schema";
 import getSession from "@/lib/session";
 import { revalidateTag } from "next/cache";
-import { z } from "zod";
 
 export async function likeTweet(tweetId: number) {
 	try {
@@ -32,16 +32,6 @@ export async function dislikeTweet(tweetId: number) {
 		revalidateTag(`like-status-${tweetId}`);
 	} catch (e) {}
 }
-
-const commentSchema = z.object({
-	newComment: z
-		.string({
-			required_error: "답글을 적어주세요.",
-		})
-		.min(10, "10자 이상 적어주세요")
-		.max(280, "280자까지 작성 가능합니다."),
-	tweetId: z.coerce.number(),
-});
 
 export default async function addComment(formData: FormData) {
 	const data = {
