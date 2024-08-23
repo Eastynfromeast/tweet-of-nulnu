@@ -4,6 +4,11 @@ import { useFormState } from "react-dom";
 import addTweet from "@/app/(tabs)/tweets/action";
 import TextArea from "../form/text-area";
 import FormButton from "../form/form-button";
+import { TweetUserInfo } from "@/app/(tabs)/page";
+
+interface AddTweetProps {
+	user: TweetUserInfo;
+}
 
 export default function AddTweet() {
 	const [state, dispatch] = useFormState(addTweet, null);

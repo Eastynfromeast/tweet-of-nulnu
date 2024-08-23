@@ -31,7 +31,7 @@ async function getUserInfo() {
 }
 
 export type InitialTweet = Prisma.PromiseReturnType<typeof getInitialTweets>;
-
+export type TweetUserInfo = Prisma.PromiseReturnType<typeof getUserInfo>;
 export default async function Home() {
 	const initialTweets = await getInitialTweets();
 	const user = await getUserInfo();
