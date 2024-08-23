@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { EMAIL_REGEX, NAME_MIN_LENGTH, PW_MIN_LENGTH } from "@/lib/constants";
+import { EMAIL_REGEX, NAME_MIN_LENGTH, PW_MIN_LENGTH, PW_REGEX } from "@/lib/constants";
 import db from "@/lib/db";
 import { validateUserEmail, validateUserName } from "@/lib/validate";
 
@@ -11,7 +11,7 @@ export const fileSchema = z.object({
 	size: z.number().max(sizeLimit, "2MB 이하 파일만 업로드 가능합니다"),
 });
 
-const checkNewPassword = ({ newPassword, confirmNewPassword }: { newPassword: string; confirmNewPassword: string }) => newPassword === confirmNewPassword;
+export const checkNewPassword = (newPassword: string, confirmNewPassword: string) => newPassword === confirmNewPassword;
 
 export const userSchema = z
 	.object({
@@ -38,7 +38,7 @@ export const userSchema = z
 		newPassword: z
 			.string()
 			.optional()
-			.refine(value => !value || value.length >= PW_MIN_LENGTH, {
+			.refine(value => !value || (value.length >= PW_MIN_LENGTH && PW_REGEX.test(value)), {
 				message: "비밀번호는 10글자 이상이어야 하며, 1개 이상의 숫자를 포함해야 합니다.",
 			}),
 		confirmNewPassword: z.string().optional(),

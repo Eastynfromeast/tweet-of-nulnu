@@ -87,18 +87,22 @@ export default function FormEditProfile({ userInfo }: FormEditProfileProps) {
 				return;
 			}
 		}
-		console.log("기존 데이터", data);
+		console.log("들어온 데이터", data);
+		console.log("변경될 비밀번호 :", data.newPassword);
 		console.log("폼 제출 시 : ", uploadUrl);
 		const formData = new FormData();
 		formData.append("avatar", data.avatar);
 		formData.append("username", data.username);
 		formData.append("email", data.email);
 		formData.append("password", data.password);
-		formData.append("password", data.newPassword ?? "");
-		formData.append("confirmPassword", data.confirmNewPassword ?? "");
+		formData.append("newPassword", data.newPassword);
+		formData.append("confirmNewPassword", data.confirmNewPassword);
 		formData.append("bio", data.bio);
 
-		return updateUserProfile(formData);
+		console.log("새로운 폼 데이터의 새로운 비밀번호", formData.get("newPassword"));
+
+		const errors = await updateUserProfile(formData);
+		setError("password", { message: errors?.fieldErrors.password?.at(0) });
 	});
 
 	const onValid = async () => {
@@ -130,37 +134,25 @@ export default function FormEditProfile({ userInfo }: FormEditProfileProps) {
 			{fileError !== null && <p className="text-red-600">{fileError[0]}</p>}
 			{errors.avatar?.message && <p className="text-red-600">{errors.avatar.message}</p>}
 
-			<RhfInput placeholder={userInfo?.username} icon="👤" type="text" required {...register("username")} errors={[errors?.username?.message ?? ""]} />
-			<RhfInput placeholder={userInfo?.email} icon="💌" type="email" required {...register("email")} errors={[errors?.email?.message ?? ""]} />
+			<RhfInput placeholder={userInfo?.username} icon="👤" type="text" required {...register("username")} error={errors?.username?.message} />
+			<RhfInput placeholder={userInfo?.email} icon="💌" type="email" required {...register("email")} error={errors?.email?.message} />
 			<RhfInput
 				placeholder="정보 수정을 위해 기존 비밀번호를 입력해주세요"
 				icon="🔑"
 				type="password"
 				required
 				{...register("password")}
-				errors={[errors?.password?.message ?? ""]}
+				error={errors?.password?.message}
 			/>
-			<RhfInput
-				placeholder="새로운 비밀번호를 입력해주세요"
-				icon="🆕"
-				type="password"
-				{...register("newPassword")}
-				errors={[errors?.newPassword?.message ?? ""]}
-			/>
+			<RhfInput placeholder="새로운 비밀번호를 입력해주세요" icon="🆕" type="password" {...register("newPassword")} error={errors.newPassword?.message} />
 			<RhfInput
 				placeholder="새로운 비밀번호를 확인해주세요"
 				icon="✔️"
 				type="password"
 				{...register("confirmNewPassword")}
-				errors={[errors?.confirmNewPassword?.message ?? ""]}
+				error={errors.confirmNewPassword?.message}
 			/>
-			<RhfInput
-				placeholder={userInfo?.bio ? userInfo.bio : "멋진 이력을 적어주세요"}
-				icon="😎"
-				type="text"
-				{...register("bio")}
-				errors={[errors?.bio?.message ?? ""]}
-			/>
+			<RhfInput placeholder={userInfo?.bio ? userInfo.bio : "멋진 이력을 적어주세요"} icon="😎" type="text" {...register("bio")} error={errors?.bio?.message} />
 			<FormButton text="Submit New Profile" />
 		</form>
 	);

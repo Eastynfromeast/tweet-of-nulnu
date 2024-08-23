@@ -3,10 +3,14 @@ import { ForwardedRef, InputHTMLAttributes, forwardRef } from "react";
 interface FormInputProps {
 	name: string;
 	errors?: string[];
+	error?: string;
 	icon?: string;
 }
 
-function RhfInput({ name, errors = [], icon, ...rest }: FormInputProps & InputHTMLAttributes<HTMLInputElement>, ref: ForwardedRef<HTMLInputElement>) {
+function RhfInput(
+	{ name, errors = [], error = "", icon, ...rest }: FormInputProps & InputHTMLAttributes<HTMLInputElement>,
+	ref: ForwardedRef<HTMLInputElement>
+) {
 	return (
 		<div className="flex items-center flex-wrap gap-3 text-sm">
 			<label htmlFor={name} className="capitalize font-semibold text-sm break-words min-w-[80px]">
@@ -39,6 +43,7 @@ function RhfInput({ name, errors = [], icon, ...rest }: FormInputProps & InputHT
 						{error}
 					</li>
 				))}
+				{error !== "" && <li className="text-red-500 font-medium px-2">{error}</li>}
 			</ul>
 		</div>
 	);

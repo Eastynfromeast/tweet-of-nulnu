@@ -10,7 +10,7 @@ export default async function User({ params }: { params: { username: string } })
 		<div className="container-basic mb-20 *:w-full">
 			<h2 className="mb-5 text-lg font-bold text-neutral-400">Profile</h2>
 			<section className="mb-10 md:grid grid-flow-col items-center">
-				<div className="flex flex-col items-center gap-3">
+				<div className="flex flex-col items-center gap-3 min-w-48">
 					<h1 className="text-2xl font-bold text-green-400 uppercase">{user?.username}</h1>
 					<div className="size-28 rounded-full bg-neutral-100" />
 				</div>
