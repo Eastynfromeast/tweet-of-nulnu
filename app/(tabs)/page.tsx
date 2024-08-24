@@ -19,7 +19,7 @@ async function getInitialTweets() {
 				},
 			},
 		},
-		take: 1,
+		take: 3,
 		orderBy: { created_at: "desc" },
 	});
 	return tweets;

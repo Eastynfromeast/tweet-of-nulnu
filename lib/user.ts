@@ -1,5 +1,6 @@
 "use server";
 
+import { Prisma } from "@prisma/client";
 import db from "./db";
 import getSession from "./session";
 
@@ -20,3 +21,5 @@ export async function getUserBySession() {
 		return user;
 	}
 }
+
+export type UserType = Prisma.PromiseReturnType<typeof getUserBySession>;

@@ -22,7 +22,7 @@ export async function getMoreTweet(page: number) {
 			},
 		},
 		skip: page * 1,
-		take: 1,
+		take: 3,
 		orderBy: { created_at: "desc" },
 	});
 	return anotherTweet;

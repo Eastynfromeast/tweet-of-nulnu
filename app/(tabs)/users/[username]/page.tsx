@@ -2,22 +2,24 @@ import Link from "next/link";
 import { getUser } from "./action";
 import TweetListItem from "@/components/tweet/tweet-list-item";
 import ButtonLogout from "@/components/form/button-logout";
-import Image from "next/image";
+import UserAvatar from "@/components/user/user-avatar";
+import { notFound } from "next/navigation";
 
 export default async function User({ params }: { params: { username: string } }) {
 	console.log(params.username);
 	const user = await getUser(params.username);
+
+	if (!user) {
+		notFound();
+	}
+
 	return (
 		<div className="container-basic mb-20 *:w-full">
 			<h2 className="mb-5 text-lg font-bold text-neutral-400">Profile</h2>
 			<section className="mb-10 md:grid grid-flow-col items-center">
 				<div className="flex flex-col items-center gap-3 min-w-48">
 					<h1 className="text-2xl font-bold text-green-400 uppercase">{user?.username}</h1>
-					{user?.avatar ? (
-						<Image src={`${user.avatar}/avatar`} alt={user.username} width={128} height={128} className="w-28 h-28 rounded-full" />
-					) : (
-						<div className="size-28 rounded-full bg-neutral-100" />
-					)}
+					<UserAvatar username={user?.username!} avatar={user?.avatar} />
 				</div>
 				<ul className="w-full flex flex-col gap-3 px-5 *:flex *:flex-row *:gap-3">
 					<li>

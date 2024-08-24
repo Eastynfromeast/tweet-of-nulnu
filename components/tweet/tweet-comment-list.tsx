@@ -5,6 +5,8 @@ import addComment from "@/app/(tabs)/tweets/[id]/action";
 import TweetCommentItem from "./tweet-comment-item";
 import TextArea from "../form/text-area";
 import FormButton from "../form/form-button";
+import { UserType } from "@/lib/user";
+import UserAvatar from "../user/user-avatar";
 
 export interface Comment {
 	id: number;
@@ -15,6 +17,7 @@ export interface Comment {
 	tweetId: number;
 	user: {
 		username: string;
+		avatar?: string | null;
 	};
 }
 
@@ -22,20 +25,24 @@ export interface TweetCommentListProps {
 	comments: Comment[];
 	commentsCount: number;
 	tweetId: number;
-	sessionId?: number;
+	user: UserType;
 }
 
-export default function TweetCommentList({ comments, commentsCount, tweetId, sessionId }: TweetCommentListProps) {
+export default function TweetCommentList({ comments, commentsCount, tweetId, user }: TweetCommentListProps) {
 	const [state, reducerFn] = useOptimistic({ comments, commentsCount }, (prevState, newComment: Comment) => ({
 		comments: [...prevState.comments, newComment],
 		commentsCount: prevState.commentsCount + 1,
 	}));
+	const userAvatarInfo = {
+		username: user?.username!,
+		avatar: user?.avatar,
+	};
 
 	const onClikcUploadComment = async (formData: FormData) => {
 		const newComment = {
 			id: Date.now(),
 			payload: "댓글이 달릴 예정입니다.",
-			userId: sessionId!,
+			userId: user?.id!,
 			tweetId,
 			created_at: new Date(),
 			updated_at: new Date(),
@@ -62,7 +69,7 @@ export default function TweetCommentList({ comments, commentsCount, tweetId, ses
 				{commentsCount === 0 && <li className="mt-2"> 표시할 댓글이 존재하지 않습니다.</li>}
 			</ul>
 			<div className="grid grid-cols-[126px_1fr] gap-5 my-5 mb-10 w-full">
-				<div className="bg-gray-500 size-28 rounded-md"></div>
+				<UserAvatar username={user?.username!} avatar={user?.avatar} />
 				<form action={onClikcUploadComment} className="flex flex-col gap-2 w-full">
 					<input name="tweetId" value={Number(tweetId)} hidden readOnly />
 					<TextArea name="newComment" placeholder="댓글을 적어주세요" errors={[]} />

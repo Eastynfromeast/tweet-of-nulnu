@@ -2,6 +2,7 @@ import TweetCommentList from "@/components/tweet/tweet-comment-list";
 import TweetDetailItem from "@/components/tweet/tweet-detail-item";
 import db from "@/lib/db";
 import getSession from "@/lib/session";
+import { getUserBySession } from "@/lib/user";
 import { Prisma } from "@prisma/client";
 import { unstable_cache as nextCache } from "next/cache";
 import { notFound } from "next/navigation";
@@ -22,6 +23,7 @@ async function getTweet(id: number) {
 					select: {
 						id: true,
 						username: true,
+						avatar: true,
 					},
 				},
 			},
@@ -104,6 +106,7 @@ async function getCachedComments(tweetId: number) {
 export default async function TweetDetail({ params }: { params: { id: string } }) {
 	const id = Number(params.id);
 	const tweet = await getCachedTweet(id);
+	const user = await getUserBySession();
 	if (isNaN(id)) {
 		return notFound();
 	}
@@ -113,8 +116,7 @@ export default async function TweetDetail({ params }: { params: { id: string } }
 
 	const { comments, commentsCount } = await getCachedComments(id);
 	const { likeCount, isLiked } = await getCachedLikeStatus(id);
-	const session = await getSession();
-	const sessionId = session.id;
+
 	return (
 		<div className="flex flex-col gap-5 px-5 pt-6 pb-10 min-h-screen *:w-full">
 			<TweetDetailItem tweet={tweet} likeCount={likeCount} isLiked={isLiked} />
@@ -125,7 +127,7 @@ export default async function TweetDetail({ params }: { params: { id: string } }
 						(<i className="not-italic inline-block px-[2px]">{commentsCount}</i>)
 					</span>
 				</h4>
-				<TweetCommentList tweetId={id} comments={comments} commentsCount={commentsCount} sessionId={sessionId} />
+				<TweetCommentList tweetId={id} comments={comments} commentsCount={commentsCount} user={user} />
 			</section>
 		</div>
 	);

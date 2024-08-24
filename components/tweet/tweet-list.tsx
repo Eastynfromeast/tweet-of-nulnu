@@ -23,15 +23,15 @@ export default function TweetList({ initialTweets }: TweetListProps) {
 		setIsLoading(true);
 		let newTweets;
 		if (btnName === "next") {
-			newTweets = await getMoreTweet(page + 1);
+			newTweets = await getMoreTweet(page + pageLength);
 			if (newTweets.length !== 0) {
-				setPage(prev => prev + 1);
+				setPage(prev => prev + pageLength);
 				setTweets(newTweets);
 			}
 		} else {
-			newTweets = await getMoreTweet(page - 1);
+			newTweets = await getMoreTweet(page - pageLength);
 			if (newTweets.length !== 0) {
-				setPage(prev => prev - 1);
+				setPage(prev => prev - pageLength);
 				setTweets(newTweets);
 			}
 		}
@@ -48,7 +48,7 @@ export default function TweetList({ initialTweets }: TweetListProps) {
 
 	return (
 		<div className="flex flex-col gap-5 w-full px-2">
-			<ul className="w-full">
+			<ul className="w-full flex flex-col gap-4">
 				{tweets.map(tweet => (
 					<TweetListItem key={tweet.id} {...tweet} />
 				))}
@@ -65,7 +65,11 @@ export default function TweetList({ initialTweets }: TweetListProps) {
 					</button>
 				</li>
 				<li>
-					<span>{page + 1}</span>
+					<ol className="flex flex-row gap-3">
+						{[page + 1, page + 2, page + 3].map((elm, index) => (
+							<li key={index}>{elm}</li>
+						))}
+					</ol>
 				</li>
 				<li>
 					<button
