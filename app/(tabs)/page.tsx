@@ -35,10 +35,10 @@ export type TweetUserInfo = Prisma.PromiseReturnType<typeof getUserInfo>;
 export default async function Home() {
 	const initialTweets = await getInitialTweets();
 	const user = await getUserInfo();
-	console.log(user);
+
 	return (
 		<div className="flex flex-col items-center min-h-screen px-5 pt-6  text-white">
-			<AddTweet />
+			<AddTweet user={user} />
 			<TweetList initialTweets={initialTweets} />
 		</div>
 	);

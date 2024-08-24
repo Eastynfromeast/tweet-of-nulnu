@@ -22,7 +22,6 @@ export default function TweetListItem({ context, id, created_at, user }: TweetLi
 				) : (
 					<div className="bg-gray-500 size-28 rounded-full" />
 				)}
-
 				<div className="flex flex-col gap-3  w-full ">
 					<div className="flex flex-row justify-between *:text-sm">
 						<h4 className="font-semibold">{user.username}</h4>
