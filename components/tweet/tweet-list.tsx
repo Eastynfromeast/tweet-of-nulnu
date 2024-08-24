@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 import TweetListItem from "./tweet-list-item";
 import { ArrowLeftIcon, ArrowRightIcon } from "@heroicons/react/24/outline";
 import { getMoreTweet, getTotalTweetCount } from "@/app/(tabs)/action";
-import { pages } from "next/dist/build/templates/app-page";
 
 interface TweetListProps {
 	initialTweets: InitialTweet;
@@ -17,8 +16,9 @@ export default function TweetList({ initialTweets }: TweetListProps) {
 	const [page, setPage] = useState(1);
 	const [isLoading, setIsLoading] = useState(false);
 	const [totalCount, setTotalCount] = useState(0);
-	const [isLastPage, setIsLastPage] = useState(false);
-	const pages = Math.round(totalCount / pageSize);
+	const [isLastPage, setIsLastPage] = useState({ prev: true, next: false });
+
+	const totalPages = Math.ceil(totalCount / pageSize);
 
 	const onClickPagination = async (event: React.MouseEvent<HTMLButtonElement>) => {
 		const btnName = event.currentTarget.name;
@@ -53,6 +53,12 @@ export default function TweetList({ initialTweets }: TweetListProps) {
 		if (pageNumber === page) {
 			return;
 		}
+		if (pageNumber === totalPages) {
+			setIsLastPage(prevState => ({
+				...prevState,
+				next: !prevState.next,
+			}));
+		}
 
 		// pageNumber와 현재 page의 차이를 구해서 그 만큼의 pageSize를 불러온다는 것 같은데 말이 안되는데
 		newTweets = await getMoreTweet(pageNumber - 1);
@@ -60,7 +66,10 @@ export default function TweetList({ initialTweets }: TweetListProps) {
 
 		if (newTweets.length !== 0) {
 			setTweets(newTweets);
-			setIsLastPage(false);
+			setIsLastPage(prevState => ({
+				...prevState,
+				prev: !prevState.prev,
+			}));
 		}
 		setIsLoading(false);
 	};
@@ -75,7 +84,7 @@ export default function TweetList({ initialTweets }: TweetListProps) {
 
 	useEffect(() => {
 		if (page === 1) {
-			setIsLastPage(true);
+			setIsLastPage({ prev: true, next: false });
 		}
 		console.log(page);
 	}, [page]);
@@ -88,25 +97,24 @@ export default function TweetList({ initialTweets }: TweetListProps) {
 				))}
 			</ul>
 			<ul className="mt-10 flex flex-row gap-5 justify-center items-center">
-				<li>
+				{/* 	<li>
 					<button
 						name="prev"
 						onClick={onClickPagination}
 						className="block p-1.5 rounded-md bg-green-500 hover:bg-blue-500 disabled:bg-neutral-700 disabled:text-neutral-400"
-						disabled={isLoading || isLastPage}
+						disabled={isLoading || isLastPage.prev}
 					>
 						<ArrowLeftIcon className="size-5 " />
 					</button>
-				</li>
+				</li> */}
 				<li>
 					<ol className="flex flex-row">
-						{[...Array(pages)].map((_, index) => (
+						{[...Array(totalPages)].map((_, index) => (
 							<li key={index}>
 								<button
 									onClick={onClickPageNumber}
 									value={index + 1}
-									style={{ backgroundColor: page === index + 1 ? "rgb(34,197,94)" : "none" }}
-									className={` py-1.5 px-2 rounded-md`}
+									className={`py-1.5 px-2 rounded-md ${page === index + 1 ? "bg-green-500 text-white" : "bg-transparent text-neutral-500"}`}
 								>
 									{index + 1}
 								</button>
@@ -114,16 +122,16 @@ export default function TweetList({ initialTweets }: TweetListProps) {
 						))}
 					</ol>
 				</li>
-				<li>
+				{/* <li>
 					<button
 						name="next"
 						onClick={onClickPagination}
 						className="block p-1.5 rounded-md bg-green-500 hover:bg-blue-500 disabled:bg-neutral-700 disabled:text-neutral-400"
-						disabled={isLoading || page + 1 >= totalCount}
+						disabled={isLoading || isLastPage.next}
 					>
 						<ArrowRightIcon className="size-5" />
 					</button>
-				</li>
+				</li> */}
 			</ul>
 		</div>
 	);
