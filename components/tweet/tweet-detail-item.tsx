@@ -13,11 +13,6 @@ interface TweetDetailItemProps {
 export default function TweetDetailItem({ tweet, likeCount, isLiked }: TweetDetailItemProps) {
 	return (
 		<article className="flex gap-5 ">
-			{tweet?.user.avatar ? (
-				<Image src={`${tweet?.user?.avatar}/avatar`} alt={tweet?.user?.username} width={128} height={128} className="rounded-full" />
-			) : (
-				<div className="bg-gray-500 size-28 rounded-full" />
-			)}
 			<UserAvatar username={tweet?.user.username!} avatar={tweet?.user.avatar} />
 			<div className="flex flex-col gap-3  w-4/5 ">
 				<div className="flex flex-row justify-between *:text-sm">

@@ -21,7 +21,7 @@ export async function getMoreTweet(page: number) {
 				},
 			},
 		},
-		skip: page * 1,
+		skip: page * 3,
 		take: 3,
 		orderBy: { created_at: "desc" },
 	});
