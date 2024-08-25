@@ -97,7 +97,7 @@ export default function TweetList({ initialTweets }: TweetListProps) {
 				))}
 			</ul>
 			<ul className="mt-10 flex flex-row gap-5 justify-center items-center">
-				{/* 	<li>
+				<li>
 					<button
 						name="prev"
 						onClick={onClickPagination}
@@ -106,7 +106,7 @@ export default function TweetList({ initialTweets }: TweetListProps) {
 					>
 						<ArrowLeftIcon className="size-5 " />
 					</button>
-				</li> */}
+				</li>
 				<li>
 					<ol className="flex flex-row">
 						{[...Array(totalPages)].map((_, index) => (
@@ -122,7 +122,7 @@ export default function TweetList({ initialTweets }: TweetListProps) {
 						))}
 					</ol>
 				</li>
-				{/* <li>
+				<li>
 					<button
 						name="next"
 						onClick={onClickPagination}
@@ -131,7 +131,7 @@ export default function TweetList({ initialTweets }: TweetListProps) {
 					>
 						<ArrowRightIcon className="size-5" />
 					</button>
-				</li> */}
+				</li>
 			</ul>
 		</div>
 	);
