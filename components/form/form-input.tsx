@@ -10,7 +10,7 @@ interface FormInputProps {
 export default function FormInput({ name, errors = [], icon, ...rest }: FormInputProps & InputHTMLAttributes<HTMLInputElement>) {
 	return (
 		<>
-			<div className={`grid grid-cols-[min(75px)_1fr] items-center gap-3 text-sm ${sourceCodePro.className}`}>
+			<div className={`flex items-center gap-3 text-sm ${sourceCodePro.className}`}>
 				<label htmlFor={name} className="capitalize font-semibold text-sm">
 					{name}
 				</label>
