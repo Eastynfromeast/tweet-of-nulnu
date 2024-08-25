@@ -1,5 +1,6 @@
 import FormEditProfile from "@/components/form/form-edit-profile";
 import db from "@/lib/db";
+import { sourceCodePro } from "@/styles/fonts";
 import { Prisma } from "@prisma/client";
 import { notFound } from "next/navigation";
 
@@ -23,7 +24,7 @@ export default async function EditUserProfile({ params }: { params: { username: 
 
 	return (
 		<div className="container-basic mb-20 *:w-full">
-			<h2 className="mb-5 text-lg font-bold text-white">Edit Profile</h2>
+			<h2 className={`${sourceCodePro.className} mb-5 text-xl font-bold text-neutral-300`}>Edit Profile</h2>
 			<section className="mb-10 md:grid grid-flow-col items-center">
 				<FormEditProfile userInfo={user} />
 			</section>

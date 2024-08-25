@@ -25,10 +25,6 @@ body {
 	box-sizing: border-box;
 }
 
-body > div {
-	background-color: #030712;
-}
-
 @layer utilities {
 	.text-balance {
 		text-wrap: balance;
@@ -37,9 +33,12 @@ body > div {
 
 @layer components {
 	.btn {
-		@apply w-full p-3 rounded-3xl mt-3 bg-blue-500 text-white font-medium hover:bg-green-500 transition disabled:bg-neutral-400 disabled:text-neutral-100;
+		@apply text-center w-full p-1.5 md:p-3 mt-3 bg-neutral-200 text-neutral-950 font-bold md:text-lg hover:bg-green-500 transition disabled:bg-neutral-400 disabled:text-neutral-100;
 	}
 	.container-basic {
-		@apply flex flex-col min-h-screen px-5 pt-6;
+		@apply flex flex-col min-h-screen px-3 md:px-5 pt-6;
+	}
+	.grid-item {
+		@apply grid grid-cols-[80px_1fr] md:grid-cols-[126px_1fr] gap-5;
 	}
 }

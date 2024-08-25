@@ -106,17 +106,25 @@ export default function FormEditProfile({ userInfo }: FormEditProfileProps) {
 	};
 
 	return (
-		<form action={onValid} className="flex flex-col gap-3 md:px-5">
+		<form action={onValid} className="flex flex-col gap-3 text-neutral-200 md:px-5">
 			<label
 				htmlFor="avatar"
-				className={`self-center size-44 rounded-full flex flex-col justify-center items-center gap-1 cursor-pointer transition hover:text-green-400 hover:border-green-400 bg-cover empty:border-2 empty:border-neutral-100 empty:border-dashed empty:text-opacity-100 relative group `}
+				className={`self-center size-44 flex flex-col justify-center items-center gap-1 cursor-pointer transition hover:text-green-400 hover:border-green-400 bg-cover empty:border-2 empty:border-neutral-100 empty:border-dashed empty:text-opacity-100 relative group group`}
 				style={{
 					backgroundImage: `url(${preview})`,
 				}}
 			>
-				{userInfo?.avatar && <Image width={128} height={128} src={`${userInfo.avatar}/avatar`} alt={userInfo.username} className="size-44 rounded-full" />}
+				{userInfo?.avatar && (
+					<Image
+						width={128}
+						height={128}
+						src={`${userInfo.avatar}/avatar`}
+						alt={userInfo.username}
+						className="size-44 p-2 border border-dashed group-hover:border-green-400"
+					/>
+				)}
 				{preview === "" && (
-					<div className={`w-full h-full  rounded-full flex flex-col justify-center items-center gap-1 absolute top-0 opacity-50 group-hover:opacity-100`}>
+					<div className={`w-full h-full flex flex-col justify-center items-center gap-1 absolute top-0 opacity-50 group-hover:opacity-100`}>
 						<PlusCircleIcon className="size-12" />
 						<span className="px-5 text-xs text-center font-semibold">
 							프로필 이미지

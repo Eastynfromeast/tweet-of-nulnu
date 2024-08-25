@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import TweetListItem from "./tweet-list-item";
 import { ArrowLeftIcon, ArrowRightIcon } from "@heroicons/react/24/outline";
 import { getMoreTweet, getTotalTweetCount } from "@/app/(tabs)/action";
+import { sourceCodePro } from "@/styles/fonts";
 
 interface TweetListProps {
 	initialTweets: InitialTweet;
@@ -101,7 +102,7 @@ export default function TweetList({ initialTweets }: TweetListProps) {
 					<button
 						name="prev"
 						onClick={onClickPagination}
-						className="block p-1.5 rounded-md bg-green-500 hover:bg-blue-500 disabled:bg-neutral-700 disabled:text-neutral-400"
+						className="block p-1.5 border-dashed border-0 border-neutral-400 text-neutral-100 hover:bg-green-500 disabled:bg-transparent disabled:text-neutral-400 disabled:border-[1px]"
 						disabled={isLoading || isLastPage.prev}
 					>
 						<ArrowLeftIcon className="size-5 " />
@@ -114,7 +115,7 @@ export default function TweetList({ initialTweets }: TweetListProps) {
 								<button
 									onClick={onClickPageNumber}
 									value={index + 1}
-									className={`py-1.5 px-2 rounded-md ${page === index + 1 ? "bg-green-500 text-white" : "bg-transparent text-neutral-500"}`}
+									className={`${sourceCodePro.className} py-1.5 px-2 ${page === index + 1 ? "text-green-500" : "bg-transparent text-neutral-500"}`}
 								>
 									{index + 1}
 								</button>
@@ -126,7 +127,7 @@ export default function TweetList({ initialTweets }: TweetListProps) {
 					<button
 						name="next"
 						onClick={onClickPagination}
-						className="block p-1.5 rounded-md bg-green-500 hover:bg-blue-500 disabled:bg-neutral-700 disabled:text-neutral-400"
+						className="block p-1.5 border-dashed border-0 border-neutral-400 text-neutral-100 hover:bg-green-500 disabled:bg-transparent disabled:text-neutral-400 disabled:border-[1px]"
 						disabled={isLoading || isLastPage.next}
 					>
 						<ArrowRightIcon className="size-5" />

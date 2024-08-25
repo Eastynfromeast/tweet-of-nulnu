@@ -1,8 +1,8 @@
 import { TweetDetail } from "@/app/(tabs)/tweets/[id]/page";
 import { formatToTimeAgo } from "@/lib/utils";
 import TweetLikeButton from "./tweet-like-button";
-import Image from "next/image";
 import UserAvatar from "../user/user-avatar";
+import { sourceCodePro } from "@/styles/fonts";
 
 interface TweetDetailItemProps {
 	tweet: TweetDetail;
@@ -12,14 +12,14 @@ interface TweetDetailItemProps {
 
 export default function TweetDetailItem({ tweet, likeCount, isLiked }: TweetDetailItemProps) {
 	return (
-		<article className="flex gap-5 ">
+		<article className="flex gap-5 text-neutral-300 ">
 			<UserAvatar username={tweet?.user.username!} avatar={tweet?.user.avatar} />
-			<div className="flex flex-col gap-3  w-4/5 ">
-				<div className="flex flex-row justify-between *:text-sm">
-					<h4 className="font-semibold">{tweet?.user.username}</h4>
-					<span>{tweet ? formatToTimeAgo(tweet.created_at.toString()) : "unknown date"}</span>
+			<div className="flex flex-col justify-between gap-3 w-[calc(100%-80px)] md:w-[calc(100%-126px)]">
+				<div className={`${sourceCodePro.className} flex flex-row justify-between`}>
+					<h4 className="font-semibold text-lg text-neutral-100">{tweet?.user.username}</h4>
+					<span className="text-sm">{tweet ? formatToTimeAgo(tweet.created_at.toString()) : "unknown date"}</span>
 				</div>
-				<p className="w-full">{tweet?.context}</p>
+				<p className="w-full min-h-10">{tweet?.context}</p>
 				<TweetLikeButton isLiked={isLiked} likeCount={likeCount} tweetId={tweet!.id} />
 			</div>
 		</article>

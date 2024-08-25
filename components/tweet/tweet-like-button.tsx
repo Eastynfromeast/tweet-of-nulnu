@@ -25,7 +25,7 @@ export default function TweetLikeButton({ likeCount, isLiked, tweetId }: TweetLi
 	};
 	return (
 		<form action={dispatch}>
-			<button className={`flex gap-1 items-center ${state.isLiked ? "text-rose-600" : "text-white"}`}>
+			<button className={`flex gap-1 items-center ${state.isLiked ? "text-green-500" : "text-neutral-300"}`}>
 				<HeartIcon className={`size-5`} />
 				<span>{state.likeCount}</span>
 			</button>

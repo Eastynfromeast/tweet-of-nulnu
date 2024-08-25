@@ -25,6 +25,11 @@ export async function getSearchedTweet(keyword: string) {
 					avatar: true,
 				},
 			},
+			_count: {
+				select: {
+					likes: true,
+				},
+			},
 		},
 	});
 	return tweets;

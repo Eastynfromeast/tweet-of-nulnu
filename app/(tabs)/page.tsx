@@ -18,6 +18,11 @@ async function getInitialTweets() {
 					avatar: true,
 				},
 			},
+			_count: {
+				select: {
+					likes: true,
+				},
+			},
 		},
 		take: 3,
 		orderBy: { created_at: "desc" },
@@ -32,12 +37,17 @@ async function getUserInfo() {
 
 export type InitialTweet = Prisma.PromiseReturnType<typeof getInitialTweets>;
 export type TweetUserInfo = Prisma.PromiseReturnType<typeof getUserInfo>;
+
+export const metadata = {
+	title: "Home",
+};
+
 export default async function Home() {
 	const initialTweets = await getInitialTweets();
 	const user = await getUserInfo();
 
 	return (
-		<div className="flex flex-col items-center min-h-screen px-5 pt-6  text-white">
+		<div className="container-basic">
 			<AddTweet user={user} />
 			<TweetList initialTweets={initialTweets} />
 		</div>

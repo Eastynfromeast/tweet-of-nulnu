@@ -3,6 +3,7 @@ import TweetDetailItem from "@/components/tweet/tweet-detail-item";
 import db from "@/lib/db";
 import getSession from "@/lib/session";
 import { getUserBySession } from "@/lib/user";
+import { sourceCodePro } from "@/styles/fonts";
 import { Prisma } from "@prisma/client";
 import { unstable_cache as nextCache } from "next/cache";
 import { notFound } from "next/navigation";
@@ -83,6 +84,7 @@ async function getComments(tweetId: number) {
 			user: {
 				select: {
 					username: true,
+					avatar: true,
 				},
 			},
 		},
@@ -118,12 +120,12 @@ export default async function TweetDetail({ params }: { params: { id: string } }
 	const { likeCount, isLiked } = await getCachedLikeStatus(id);
 
 	return (
-		<div className="flex flex-col gap-5 px-5 pt-6 pb-10 min-h-screen *:w-full">
+		<div className="flex flex-col gap-5 px-3 md:px-5 pt-6 pb-10 min-h-screen *:w-full">
 			<TweetDetailItem tweet={tweet} likeCount={likeCount} isLiked={isLiked} />
 			<section className=" border-t-[1px] border-dashed border-neutral-500 mt-10 py-4">
-				<h4 className="font-semibold text-lg">
+				<h4 className={`${sourceCodePro.className} font-semibold text-2xl text-neutral-400`}>
 					Replies
-					<span className="text-sm inline-block ml-1 ">
+					<span className="text-lg inline-block ml-1 ">
 						(<i className="not-italic inline-block px-[2px]">{commentsCount}</i>)
 					</span>
 				</h4>

@@ -11,8 +11,8 @@ export default function FormsAndActions() {
 	const [state, dispatch] = useFormState(onSubmit, null);
 	console.log("state changes into", state);
 	return (
-		<div className="flex flex-col pt-20 px-10">
-			<FormHeader additionalStyle="mb-10" title="Authentication" />
+		<div className="flex flex-col pt-20 px-10 max-w-screen-md mx-auto">
+			<FormHeader additionalStyle="mb-10" title="Log In" />
 			<form action={dispatch} className="flex flex-col gap-3">
 				<FormInput name="email" icon="💌" type="email" placeholder="Email" required errors={state?.fieldErrors.email ?? []} />
 				<FormInput name="password" icon="🔑" type="password" placeholder="Password" required errors={state?.fieldErrors.password ?? []} />

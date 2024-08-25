@@ -1,3 +1,4 @@
+import { sourceCodePro } from "@/styles/fonts";
 import { ForwardedRef, InputHTMLAttributes, forwardRef } from "react";
 
 interface FormInputProps {
@@ -12,7 +13,7 @@ function RhfInput(
 	ref: ForwardedRef<HTMLInputElement>
 ) {
 	return (
-		<div className="flex items-center flex-wrap gap-3 text-sm">
+		<div className={`${sourceCodePro.className} flex items-center flex-wrap gap-3 text-sm`}>
 			<label htmlFor={name} className="capitalize font-semibold text-sm break-words min-w-[80px]">
 				{name === "confirmPassword" ? "confirm password" : name}
 			</label>
@@ -32,7 +33,8 @@ function RhfInput(
 				</span>
 				<input
 					ref={ref}
-					className="py-3 pr-3 pl-10 w-full rounded-2xl outline-none ring ring-transparent bg-white focus:ring-orange-500 focus:outline-orange-300 invalid:ring-red-400 empty:ring-gray-300 empty:ring-1"
+					className="py-3 pr-3 pl-10 w-full border-b-[2px] border-b-neutral-300 border-dashed outline-none text-neutral-100 ring ring-transparent bg-transparent focus:outline-2 focus:outline-green-300 focus:text-green-400 invalid:outline-red-400 active:bg-transparent
+					"
 					name={name}
 					{...rest}
 				/>

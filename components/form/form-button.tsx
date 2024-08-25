@@ -1,5 +1,6 @@
 "use client";
 
+import { pressStart2p, sourceCodePro } from "@/styles/fonts";
 import { useFormStatus } from "react-dom";
 
 interface FormButtonProps {
@@ -11,7 +12,7 @@ export default function FormButton({ text }: FormButtonProps) {
 	return (
 		<button
 			disabled={pending}
-			className="w-full p-3 rounded-3xl mt-3 bg-blue-500 text-white font-medium hover:bg-green-500 transition disabled:bg-neutral-400 disabled:text-neutral-100"
+			className={`${sourceCodePro.className} w-full p-1.5 md:p-3 mt-3 bg-neutral-200 text-neutral-950 font-bold md:text-lg hover:bg-green-400 transition disabled:bg-neutral-400 disabled:text-neutral-100`}
 		>
 			{pending ? "loading..." : text}
 		</button>

@@ -20,6 +20,11 @@ export async function getMoreTweet(page: number) {
 					avatar: true,
 				},
 			},
+			_count: {
+				select: {
+					likes: true,
+				},
+			},
 		},
 		skip: page * 3,
 		take: 3,

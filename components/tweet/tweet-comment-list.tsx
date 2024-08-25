@@ -7,6 +7,7 @@ import TextArea from "../form/text-area";
 import FormButton from "../form/form-button";
 import { UserType } from "@/lib/user";
 import UserAvatar from "../user/user-avatar";
+import { nanumGothicCoding, sourceCodePro } from "@/styles/fonts";
 
 export interface Comment {
 	id: number;
@@ -33,10 +34,6 @@ export default function TweetCommentList({ comments, commentsCount, tweetId, use
 		comments: [...prevState.comments, newComment],
 		commentsCount: prevState.commentsCount + 1,
 	}));
-	const userAvatarInfo = {
-		username: user?.username!,
-		avatar: user?.avatar,
-	};
 
 	const onClikcUploadComment = async (formData: FormData) => {
 		const newComment = {
@@ -66,13 +63,16 @@ export default function TweetCommentList({ comments, commentsCount, tweetId, use
 						user={comment.user}
 					/>
 				))}
-				{commentsCount === 0 && <li className="mt-2"> 표시할 댓글이 존재하지 않습니다.</li>}
+				{commentsCount === 0 && <li className={`${nanumGothicCoding.className}  my-2 text-neutral-400`}> 댓글을 기다리는 중입니다... </li>}
 			</ul>
-			<div className="grid grid-cols-[126px_1fr] gap-5 my-5 mb-10 w-full">
-				<UserAvatar username={user?.username!} avatar={user?.avatar} />
+			<div className="grid-item my-5 mb-10 w-full">
+				<div>
+					<UserAvatar username={user?.username!} avatar={user?.avatar} />
+					<h3 className={`${sourceCodePro.className} text-center font-semibold mt-2 text-neutral-300`}>{user?.username}</h3>
+				</div>
 				<form action={onClikcUploadComment} className="flex flex-col gap-2 w-full">
 					<input name="tweetId" value={Number(tweetId)} hidden readOnly />
-					<TextArea name="newComment" placeholder="댓글을 적어주세요" errors={[]} />
+					<TextArea name="newComment" placeholder="10자 이상의 댓글을 적어주세요" errors={[]} />
 					<FormButton text="Add comment!" />
 				</form>
 			</div>

@@ -4,9 +4,9 @@ import TweetListItem from "@/components/tweet/tweet-list-item";
 import ButtonLogout from "@/components/form/button-logout";
 import UserAvatar from "@/components/user/user-avatar";
 import { notFound } from "next/navigation";
+import { sourceCodePro } from "@/styles/fonts";
 
 export default async function User({ params }: { params: { username: string } }) {
-	console.log(params.username);
 	const user = await getUser(params.username);
 
 	if (!user) {
@@ -15,13 +15,13 @@ export default async function User({ params }: { params: { username: string } })
 
 	return (
 		<div className="container-basic mb-20 *:w-full">
-			<h2 className="mb-5 text-lg font-bold text-neutral-400">Profile</h2>
-			<section className="mb-10 md:grid grid-flow-col items-center">
+			<h2 className={`${sourceCodePro.className} mb-5 text-lg font-bold text-neutral-300`}>Profile</h2>
+			<section className={`${sourceCodePro.className} mb-10 md:grid grid-flow-col items-center`}>
 				<div className="flex flex-col items-center gap-3 min-w-48">
-					<h1 className="text-2xl font-bold text-green-400 uppercase">{user?.username}</h1>
+					<h1 className={`${sourceCodePro.className} text-2xl font-bold text-green-400 uppercase`}>{user?.username}</h1>
 					<UserAvatar username={user?.username!} avatar={user?.avatar} />
 				</div>
-				<ul className="w-full flex flex-col gap-3 px-5 *:flex *:flex-row *:gap-3">
+				<ul className="w-full flex flex-col gap-3 px-5 text-neutral-200 *:flex *:flex-row *:gap-3">
 					<li>
 						<span className="opacity-80">name</span>
 						<p>{user?.username}</p>
@@ -37,7 +37,7 @@ export default async function User({ params }: { params: { username: string } })
 					<li className="w-full">
 						<Link
 							href={`/users/${user?.username}/edit`}
-							className="w-full p-3 rounded-3xl mt-3 text-center bg-blue-500 text-white font-medium hover:bg-green-500 transition disabled:bg-neutral-400 disabled:text-neutral-100"
+							className="text-center w-full p-1.5 md:p-3 mt-3 bg-neutral-300 text-neutral-950 font-bold md:text-lg hover:bg-green-400 transition disabled:bg-neutral-400 disabled:text-neutral-100"
 						>
 							Edit Profile
 						</Link>
@@ -45,7 +45,7 @@ export default async function User({ params }: { params: { username: string } })
 				</ul>
 			</section>
 			<section>
-				<h2 className="mb-5 text-lg font-bold text-neutral-400">Tweets</h2>
+				<h2 className={`${sourceCodePro.className} mb-5 text-lg font-bold text-neutral-300`}>Tweets</h2>
 				<ul className="flex flex-col gap-5 last:border-b-0">
 					{user?.tweets?.map(tweet => (
 						<TweetListItem key={tweet.id} user={user} {...tweet} />
