@@ -16,7 +16,7 @@ export default function TweetCommentItem({ context, id, created_at, user }: Twee
 	return (
 		<li className="w-full">
 			<article className="flex gap-5 border-b-neutral-600 border-b-[1px] pb-4 border-dashed">
-				<UserAvatar user={user} />
+				<UserAvatar username={user.username} avatar={user.avatar} />
 				<div className="flex flex-col gap-3  w-4/5 ">
 					<div className="flex flex-row justify-between *:text-sm">
 						<h4 className="font-semibold">{user.username}</h4>
