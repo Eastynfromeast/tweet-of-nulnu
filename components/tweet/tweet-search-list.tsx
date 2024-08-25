@@ -11,6 +11,7 @@ interface TweetListProps {
 
 export default function TweetSearchList({ initialTweets, keyword }: TweetListProps) {
 	const [tweets, setTweets] = useState(initialTweets);
+
 	useEffect(() => {
 		if (keyword) {
 			setTweets(initialTweets);

@@ -22,6 +22,7 @@ export async function getSearchedTweet(keyword: string) {
 				select: {
 					id: true,
 					username: true,
+					avatar: true,
 				},
 			},
 		},
